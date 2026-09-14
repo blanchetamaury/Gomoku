@@ -1,17 +1,17 @@
 CXX = c++
 
-CXXFLAGS = --lSDL2 -lSDL2_image -lm -g
+CXXFLAGS = -lSDL2 -lSDL2_image -lm -g
 
 SRC = src/main.cpp ${GRAPHIC}
 
-GRAPHIC = init/init.cpp \
-			init/init_texture.cpp \
+GRAPHIC = src/graphic/init/init.cpp \
+			src/graphic/init/texture/init_texture.cpp \
 
 ALGO =
 
 OBJ = $(SRC:%.cpp=%.o)
 
-NAME = PmergeMe
+NAME = Gomoku
 
 all: $(NAME)
 
