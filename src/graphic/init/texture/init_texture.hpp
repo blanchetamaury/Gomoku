@@ -4,12 +4,12 @@
 # include "../../include/include.hpp"
 #include <iostream>
 
-class Texture {
+class Init_texture {
 	public:
 		SDL_Texture	*data;
 
-		Texture(std::string *path, SDL_Renderer *renderer);
-		~Texture();
+		Init_texture(std::string path, SDL_Renderer *renderer);
+		~Init_texture();
 
 };
 

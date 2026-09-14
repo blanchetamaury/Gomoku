@@ -1,5 +1,5 @@
-#ifndef INIT_TEXTURE_HPP
-# define INIT_TEXTURE_HPP
+#ifndef INIT_HPP
+# define INIT_HPP
 
 # include "../include/include.hpp"
 #include <iostream>

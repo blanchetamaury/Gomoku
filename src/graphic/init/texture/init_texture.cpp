@@ -1,10 +1,10 @@
 #include "../../include/include.hpp"
 #include "init_texture.hpp"
 
-Texture::Texture(std::string *path, SDL_Renderer *renderer) {
+Init_texture::Init_texture(std::string path, SDL_Renderer *renderer) {
 	SDL_Surface	*surface;
 
-	surface = IMG_Load(path->c_str());
+	surface = IMG_Load(path.c_str());
 	if (!surface)
 	{
 		SDL_Log("Error, Loading image : %s", IMG_GetError());
@@ -19,6 +19,6 @@ Texture::Texture(std::string *path, SDL_Renderer *renderer) {
 	}
 }
 
-Texture::~Texture() {
+Init_texture::~Init_texture() {
 	SDL_DestroyTexture(this->data);
 }
