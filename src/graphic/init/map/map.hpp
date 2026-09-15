@@ -5,12 +5,13 @@
 # include "../texture/init_texture.hpp"
 # include <iostream>
 
-# define NB_CASE 11
+# define NB_CASE 19
 
 class Map {
 	public:
 		typedef struct s_map {
 			Init_texture texture;
+
 			std::string  occupied_by;
 
 			int			 pos_x;
@@ -18,10 +19,18 @@ class Map {
 		} t_map;
 
 		t_map			map[NB_CASE * NB_CASE];
+		int				x;
+		int				y;
+		int				w;
+		int				h;
 
-		Map(std::string path_texture_one, std::string path_texture_second, SDL_Renderer *renderer);
+		Init_texture Player_one;
+		Init_texture Player_two;
+
+		Map(std::string path_texture_one, std::string path_texture_second, SDL_Renderer *renderer, SDL_Window *window);
 		~Map();
 
+		void texturePlayer(std::string path_player_one, std::string path_player_two, SDL_Renderer *renderer);
 		void drawMap(SDL_Renderer *renderer);
 };
 
