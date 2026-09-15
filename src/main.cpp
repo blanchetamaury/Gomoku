@@ -2,10 +2,11 @@
 #include "graphic/init/init.hpp"
 #include "graphic/init/texture/init_texture.hpp"
 #include "graphic/init/map/map.hpp"
+#include "graphic/init/player/player.hpp"
 
 #define TARGET_FPS 60
 
-void	listenEvent(bool &running, SDL_Event *event, Map *map, int *round)
+void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 {
 	while (SDL_PollEvent(event)) {
         switch (event->type) {
@@ -19,21 +20,20 @@ void	listenEvent(bool &running, SDL_Event *event, Map *map, int *round)
                 int y = event->button.y;
                 
                 if (event->button.button == SDL_BUTTON_LEFT || event->button.button == SDL_BUTTON_RIGHT) {
-					if (x > map->x && x < map->x + map->w &&
-						y > map->y && y < map->y + map->h) {
-						int value_x = x - map->x;
-						int value_y = y - map->y;
+					if (x > grill->x && x < grill->x + grill->w &&
+						y > grill->y && y < grill->y + grill->h) {
+						int value_x = x - grill->x;
+						int value_y = y - grill->y;
 						if (value_x != 0)
 							value_x /= SIZE_X_CASE;
 						if (value_y != 0)
 							value_y /= SIZE_Y_CASE;
-						if (map->map[value_x + value_y * NB_CASE].occupied_by == "0") {
+						if (grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by == "0") {
 							if (*round % 2 == 0)
-								map->map[value_x + value_y * NB_CASE].occupied_by = "1";
+								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
 							else 
-								map->map[value_x + value_y * NB_CASE].occupied_by = "2";
+								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "2";
 							(*round)++;
-							printf("number of turns : %d\n", *round);
 						}
 					}
 				}
@@ -55,30 +55,67 @@ void	listenEvent(bool &running, SDL_Event *event, Map *map, int *round)
     }
 }
 
-int main() {
-	Init graph;
-	Map	 map("./src/graphic/assets/black.png", "./src/graphic/assets/white.png", graph.renderer, graph.window);
-	
-	Uint32	frame_time;
-	Uint32	frame_duration;
-	Uint32	start_time;
-	
-	SDL_Event		event;
-	bool			running = true;
-	int				round = 0;
+SDL_Texture* createGradientTexture(SDL_Renderer *renderer, int w, int h) {
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+                                              SDL_TEXTUREACCESS_STREAMING, w, h);
+    return texture;
+}
 
-	map.texturePlayer("./src/graphic/assets/player_one.png", "./src/graphic/assets/player_two.png", graph.renderer);
-	frame_time = 1000 / TARGET_FPS;
-	while (running)
-	{
-		listenEvent(running, &event, &map, &round);
-		start_time = SDL_GetTicks();
-		SDL_SetRenderDrawColor(graph.renderer, 50, 0, 50, 255);
-		SDL_RenderClear(graph.renderer);
-		map.drawMap(graph.renderer);
-		SDL_RenderPresent(graph.renderer);
-		frame_duration = SDL_GetTicks() - start_time;
-		if (frame_duration < frame_time)
-			SDL_Delay(frame_time - frame_duration);
-	}
+void updateRainbowTexture(SDL_Texture *texture, int w, int h, Uint32 time) {
+    void *pixels;
+    int pitch;
+    SDL_LockTexture(texture, NULL, &pixels, &pitch);
+    Uint32 *pix = (Uint32*)pixels;
+
+    for (int y = 0; y < h; y++) {
+        float hue = fmod((time / 20.0) + (y * 0.5), 360.0);
+        Uint8 r, g, b;
+        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);
+        Uint32 color = (r << 24) | (g << 16) | (b << 8) | 255;
+
+        for (int x = 0; x < w; x++) {
+            pix[y * (pitch / 4) + x] = color;
+        }
+    }
+
+    SDL_UnlockTexture(texture);
+}
+
+int main() {
+    Init graph;
+    Map map("./src/graphic/assets/black.png", "./src/graphic/assets/white.png", graph.renderer, graph.window);
+    Player grill("./src/graphic/assets/player_one.png", "./src/graphic/assets/player_two.png", graph.renderer, graph.window);
+
+    Uint32 frame_time;
+    Uint32 frame_duration;
+    Uint32 start_time;
+
+    SDL_Event event;
+    bool running = true;
+    int round = 0;
+
+    int screenW, screenH;
+    SDL_GetWindowSize(graph.window, &screenW, &screenH);
+    SDL_Texture *bgTexture = createGradientTexture(graph.renderer, screenW, screenH);
+
+    frame_time = 1000 / TARGET_FPS;
+    while (running)
+    {
+        listenEvent(running, &event, &grill, &round);
+        start_time = SDL_GetTicks();
+
+        updateRainbowTexture(bgTexture, screenW, screenH, start_time);
+        SDL_RenderCopy(graph.renderer, bgTexture, NULL, NULL);
+
+        map.drawMap(graph.renderer);
+        grill.drawGrill(graph.renderer);
+        SDL_RenderPresent(graph.renderer);
+
+        frame_duration = SDL_GetTicks() - start_time;
+        if (frame_duration < frame_time)
+            SDL_Delay(frame_time - frame_duration);
+    }
+
+    SDL_DestroyTexture(bgTexture);
+    return 0;
 }

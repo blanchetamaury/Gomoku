@@ -24,13 +24,9 @@ class Map {
 		int				w;
 		int				h;
 
-		Init_texture Player_one;
-		Init_texture Player_two;
-
 		Map(std::string path_texture_one, std::string path_texture_second, SDL_Renderer *renderer, SDL_Window *window);
 		~Map();
 
-		void texturePlayer(std::string path_player_one, std::string path_player_two, SDL_Renderer *renderer);
 		void drawMap(SDL_Renderer *renderer);
 };
 

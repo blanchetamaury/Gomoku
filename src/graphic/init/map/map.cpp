@@ -31,10 +31,6 @@ Map::Map(std::string path_one, std::string path_two, SDL_Renderer *renderer, SDL
 
 Map::~Map() {}
 
-void Map::texturePlayer(std::string path_player_one, std::string path_player_two, SDL_Renderer *renderer) {
-	this->Player_one.loadTexture(path_player_one, renderer);
-	this->Player_two.loadTexture(path_player_two, renderer);
-}
 
 void Map::drawMap(SDL_Renderer *renderer) {
 	SDL_Rect	rectdst = {0, 0, SIZE_X_CASE, SIZE_Y_CASE};
@@ -44,9 +40,5 @@ void Map::drawMap(SDL_Renderer *renderer) {
 		rectdst.y = this->map[i].pos_y;
 
 		SDL_RenderCopy(renderer, this->map[i].texture.data, NULL, &rectdst);
-		if (map[i].occupied_by == "1")
-			SDL_RenderCopy(renderer, this->Player_one.data, NULL, &rectdst);
-		if (map[i].occupied_by == "2")
-			SDL_RenderCopy(renderer, this->Player_two.data, NULL, &rectdst);
 	}
 }
