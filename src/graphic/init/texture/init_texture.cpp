@@ -1,7 +1,7 @@
 #include "../../include/include.hpp"
 #include "init_texture.hpp"
 
-Init_texture::Init_texture(std::string path, SDL_Renderer *renderer) {
+void Init_texture::loadTexture(std::string path, SDL_Renderer *renderer) {
 	SDL_Surface	*surface;
 
 	surface = IMG_Load(path.c_str());
@@ -19,6 +19,16 @@ Init_texture::Init_texture(std::string path, SDL_Renderer *renderer) {
 	}
 }
 
+Init_texture::Init_texture(std::string path, SDL_Renderer *renderer) {
+	this->loadTexture(path, renderer);
+}
+
+Init_texture::Init_texture() {
+	this->data = NULL;
+}
+
 Init_texture::~Init_texture() {
-	SDL_DestroyTexture(this->data);
+	if (this->data)
+		SDL_DestroyTexture(this->data);
+	this->data = NULL;
 }

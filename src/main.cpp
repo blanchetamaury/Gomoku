@@ -1,6 +1,7 @@
 #include "graphic/include/include.hpp"
 #include "graphic/init/init.hpp"
 #include "graphic/init/texture/init_texture.hpp"
+#include "graphic/init/map/map.hpp"
 
 #define TARGET_FPS 60
 
@@ -20,21 +21,23 @@ void	listenEvent(bool &running, SDL_Event *event)
 
 int main() {
 	Init graph;
-	Init_texture black("./src/graphic/assets/black.png", graph.renderer);
-	Init_texture White("./src/graphic/assets/white.png", graph.renderer);
+	Map	 map("./src/graphic/assets/black.png", "./src/graphic/assets/white.png", graph.renderer);
+	
 	Uint32	frame_time;
 	Uint32	frame_duration;
 	Uint32	start_time;
+	
 	SDL_Event		event;
-	bool	running = true;
+	bool			running = true;
 
 	frame_time = 1000 / TARGET_FPS;
 	while (running)
 	{
 		listenEvent(running, &event);
 		start_time = SDL_GetTicks();
-		SDL_SetRenderDrawColor(graph.renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(graph.renderer, 50, 0, 50, 255);
 		SDL_RenderClear(graph.renderer);
+		map.drawMap(graph.renderer);
 		SDL_RenderPresent(graph.renderer);
 		frame_duration = SDL_GetTicks() - start_time;
 		if (frame_duration < frame_time)

@@ -2,8 +2,7 @@
 # define INIT_HPP
 
 # include "../include/include.hpp"
-#include <iostream>
-
+# include <iostream>
 class Init  {
 	public:
 		SDL_Renderer	*renderer;

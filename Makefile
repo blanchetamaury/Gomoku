@@ -6,6 +6,7 @@ SRC = src/main.cpp ${GRAPHIC}
 
 GRAPHIC = src/graphic/init/init.cpp \
 			src/graphic/init/texture/init_texture.cpp \
+			src/graphic/init/map/map.cpp
 
 ALGO =
 
