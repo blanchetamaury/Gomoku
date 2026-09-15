@@ -5,7 +5,7 @@
 # include "../texture/init_texture.hpp"
 # include <iostream>
 
-# define NB_CASE 19
+# define NB_CASE 18
 
 class Map {
 	public:

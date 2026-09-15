@@ -3,8 +3,11 @@
 #include "graphic/init/texture/init_texture.hpp"
 #include "graphic/init/map/map.hpp"
 #include "graphic/init/player/player.hpp"
+#include "algo/rules/rules.hpp"
 
 #define TARGET_FPS 60
+
+Rules rules;
 
 void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 {
@@ -33,6 +36,10 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
 							else 
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "2";
+                            if (rules.checkWin(value_x + value_y * (NB_CASE - 1), grill) == true) {
+                                printf("winner is %d\n", *round % 2 + 1 );
+                                running = false;
+                            }
 							(*round)++;
 						}
 					}
