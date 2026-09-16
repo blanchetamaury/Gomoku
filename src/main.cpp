@@ -31,7 +31,7 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 							value_x /= SIZE_X_CASE;
 						if (value_y != 0)
 							value_y /= SIZE_Y_CASE;
-						if (grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by == "0") {
+						if (grill->checkPosibility(value_x + value_y * (NB_CASE - 1)) == true && grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by == "0") {
 							if (*round % 2 == 0)
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
 							else 
@@ -40,6 +40,7 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
                                 printf("winner is %d\n", *round % 2 + 1 );
                                 running = false;
                             }
+                            grill->last_pos = value_x + value_y * (NB_CASE - 1);
 							(*round)++;
 						}
 					}
@@ -99,7 +100,7 @@ int main() {
 
     SDL_Event event;
     bool running = true;
-    int round = 0;
+    int round = 1;
 
     int screenW, screenH;
     SDL_GetWindowSize(graph.window, &screenW, &screenH);

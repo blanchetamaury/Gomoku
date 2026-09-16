@@ -21,6 +21,8 @@ class Player {
 		int				w;
 		int				h;
 
+		int				last_pos;
+
 		Init_texture Player_one;
 		Init_texture Player_two;
 
@@ -28,6 +30,7 @@ class Player {
 		~Player();
 
 		void drawGrill(SDL_Renderer *renderer);
+		bool checkPosibility(int pos);
 };
 
 void HSVtoRGB(float h, float s, float v, Uint8 &r, Uint8 &g, Uint8 &b);

@@ -25,6 +25,8 @@ Player::Player(std::string path_one, std::string path_two, SDL_Renderer *rendere
 		grill[i].pos_x = start_x;
 		grill[i].pos_y = start_y;
 	}
+    grill[(NB_CASE - 1) * (NB_CASE - 1) / 2].occupied_by = "1";
+    last_pos = (NB_CASE - 1) * (NB_CASE - 1) / 2;
 }
 
 Player::~Player() {}
@@ -47,6 +49,28 @@ void HSVtoRGB(float h, float s, float v, Uint8 &r, Uint8 &g, Uint8 &b) {
     b = (Uint8)((b1 + m) * 255);
 }
 
+bool Player::checkPosibility(int pos) {
+    if (pos >= this->last_pos - 1 && pos <= this->last_pos + 1)
+        return true;
+    if (pos >= this->last_pos - 1 - (NB_CASE - 1) && pos <= this->last_pos + 1 - (NB_CASE - 1))
+        return true;
+    if (pos >= this->last_pos - 1 + (NB_CASE - 1) && pos <= this->last_pos + 1 + (NB_CASE - 1))
+        return true;
+    return false;
+}
+
+void drawPosibility(int i, SDL_Rect	rectdst, Player *p, Uint32 time, SDL_Renderer *renderer) {
+    if (p->checkPosibility(i) == true && p->grill[i].occupied_by == "0") {
+        float hue = fmod((time / 10.0) + (i * 15), 360.0);
+            
+        Uint8 r, g, b;
+        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);
+
+        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+        SDL_RenderDrawRect(renderer, &rectdst);
+    }
+}
+
 void Player::drawGrill(SDL_Renderer *renderer) {
     SDL_Rect	rectdst = {0, 0, SIZE_X_CASE, SIZE_Y_CASE};
     Uint32 time = SDL_GetTicks();
@@ -55,15 +79,8 @@ void Player::drawGrill(SDL_Renderer *renderer) {
         rectdst.x = this->grill[i].pos_x;
         rectdst.y = this->grill[i].pos_y;
 
-        if (grill[i].occupied_by == "0") {
-            float hue = fmod((time / 10.0) + (i * 15), 360.0);
-            
-            Uint8 r, g, b;
-            HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);
+        drawPosibility(i, rectdst, this, time, renderer);
 
-            SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-            SDL_RenderDrawRect(renderer, &rectdst);
-        }
         if (grill[i].occupied_by == "1")
             SDL_RenderCopy(renderer, this->Player_one.data, NULL, &rectdst);
         if (grill[i].occupied_by == "2")
