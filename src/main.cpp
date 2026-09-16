@@ -63,36 +63,11 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
     }
 }
 
-SDL_Texture* createGradientTexture(SDL_Renderer *renderer, int w, int h) {
-    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                              SDL_TEXTUREACCESS_STREAMING, w, h);
-    return texture;
-}
-
-void updateRainbowTexture(SDL_Texture *texture, int w, int h, Uint32 time) {
-    void *pixels;
-    int pitch;
-    SDL_LockTexture(texture, NULL, &pixels, &pitch);
-    Uint32 *pix = (Uint32*)pixels;
-
-    for (int y = 0; y < h; y++) {
-        float hue = fmod((time / 20.0) + (y * 0.5), 360.0);
-        Uint8 r, g, b;
-        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);
-        Uint32 color = (r << 24) | (g << 16) | (b << 8) | 255;
-
-        for (int x = 0; x < w; x++) {
-            pix[y * (pitch / 4) + x] = color;
-        }
-    }
-
-    SDL_UnlockTexture(texture);
-}
-
 int main() {
     Init graph;
-    Map map("./src/graphic/assets/black.png", "./src/graphic/assets/white.png", graph.renderer, graph.window);
+    Map map("./src/graphic/assets/square.png", "./src/graphic/assets/square.png", graph.renderer, graph.window);
     Player grill("./src/graphic/assets/player_one.png", "./src/graphic/assets/player_two.png", graph.renderer, graph.window);
+    Init_texture bg("./src/graphic/assets/bg.png", graph.renderer);
 
     Uint32 frame_time;
     Uint32 frame_duration;
@@ -104,7 +79,8 @@ int main() {
 
     int screenW, screenH;
     SDL_GetWindowSize(graph.window, &screenW, &screenH);
-    SDL_Texture *bgTexture = createGradientTexture(graph.renderer, screenW, screenH);
+
+    SDL_Rect	rectdst = {0, 0, screenW, screenH};
 
     frame_time = 1000 / TARGET_FPS;
     while (running)
@@ -112,8 +88,8 @@ int main() {
         listenEvent(running, &event, &grill, &round);
         start_time = SDL_GetTicks();
 
-        updateRainbowTexture(bgTexture, screenW, screenH, start_time);
-        SDL_RenderCopy(graph.renderer, bgTexture, NULL, NULL);
+
+        SDL_RenderCopy(graph.renderer, bg.data, NULL, &rectdst);
 
         map.drawMap(graph.renderer);
         grill.drawGrill(graph.renderer);
@@ -124,6 +100,5 @@ int main() {
             SDL_Delay(frame_time - frame_duration);
     }
 
-    SDL_DestroyTexture(bgTexture);
     return 0;
 }
