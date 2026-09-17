@@ -10,6 +10,7 @@ class Rules {
 		~Rules();
 
 		bool checkWin(int pos, Player *p);
+		void CaptureSPair(int pos, Player *p);
 };
 
 #endif

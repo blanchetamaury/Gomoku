@@ -32,10 +32,11 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 						if (value_y != 0)
 							value_y /= SIZE_Y_CASE;
 						if (grill->checkPosibility(value_x + value_y * (NB_CASE - 1)) == true && grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by == "0") {
-							if (*round % 2 == 0)
+                            if (*round % 2 == 0)
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
 							else 
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "2";
+                            rules.CaptureSPair(value_x + value_y * (NB_CASE - 1), grill);
                             if (rules.checkWin(value_x + value_y * (NB_CASE - 1), grill) == true) {
                                 printf("Winner is %d\n", *round % 2 + 1 );
                                 running = false;
