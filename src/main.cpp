@@ -37,7 +37,10 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 							else 
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "2";
                             if (rules.checkWin(value_x + value_y * (NB_CASE - 1), grill) == true) {
-                                printf("winner is %d\n", *round % 2 + 1 );
+                                printf("Winner is %d\n", *round % 2 + 1 );
+                                running = false;
+                            } else if ( *round + 1 == (NB_CASE - 1) * (NB_CASE - 1)) {
+                                printf("Null game\n");
                                 running = false;
                             }
                             grill->last_pos = value_x + value_y * (NB_CASE - 1);

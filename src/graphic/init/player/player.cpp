@@ -16,6 +16,7 @@ Player::Player(std::string path_one, std::string path_two, SDL_Renderer *rendere
 	y = start_y;
 	w = nb_case * SIZE_X_CASE;
 	h = nb_case * SIZE_Y_CASE;
+
 	for (int i = 0; i < nb_case * nb_case; i++, start_x += SIZE_X_CASE) {
 		if (i != 0 && i % nb_case == 0) {
 			start_x = (windowWidth - nb_case * SIZE_X_CASE) / 2;
@@ -25,6 +26,7 @@ Player::Player(std::string path_one, std::string path_two, SDL_Renderer *rendere
 		grill[i].pos_x = start_x;
 		grill[i].pos_y = start_y;
 	}
+
     grill[(NB_CASE - 1) * (NB_CASE - 1) / 2].occupied_by = "1";
     last_pos = (NB_CASE - 1) * (NB_CASE - 1) / 2;
 }
@@ -50,24 +52,44 @@ void HSVtoRGB(float h, float s, float v, Uint8 &r, Uint8 &g, Uint8 &b) {
 }
 
 bool Player::checkPosibility(int pos) {
-    if (pos >= this->last_pos - 1 && pos <= this->last_pos + 1)
+    int valueLeft = 1;
+    int valueRight = 1;
+    
+    if (this->last_pos % (NB_CASE - 1) == 0)
+        valueLeft = 0;
+    if (this->last_pos % (NB_CASE - 1) == (NB_CASE - 2))
+        valueRight = 0;
+
+    if (pos >= this->last_pos - valueLeft && pos <= this->last_pos + valueRight)
         return true;
-    if (pos >= this->last_pos - 1 - (NB_CASE - 1) && pos <= this->last_pos + 1 - (NB_CASE - 1))
+    if (pos >= this->last_pos - valueLeft - (NB_CASE - 1) && pos <= this->last_pos + valueRight - (NB_CASE - 1))
         return true;
-    if (pos >= this->last_pos - 1 + (NB_CASE - 1) && pos <= this->last_pos + 1 + (NB_CASE - 1))
+    if (pos >= this->last_pos - valueLeft + (NB_CASE - 1) && pos <= this->last_pos + valueRight + (NB_CASE - 1))
         return true;
+
     return false;
 }
 
-void drawPosibility(int i, SDL_Rect	rectdst, Player *p, Uint32 time, SDL_Renderer *renderer) {
+void drawPosibility(int i, SDL_Rect rectdst, Player *p, Uint32 time,
+                    SDL_Renderer *renderer, int thickness) {
     if (p->checkPosibility(i) == true && p->grill[i].occupied_by == "0") {
         float hue = fmod((time / 10.0) + (i * 15), 360.0);
-            
+
         Uint8 r, g, b;
         HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);
-
         SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-        SDL_RenderDrawRect(renderer, &rectdst);
+
+        for (int k = 0; k < thickness; k++) {
+            SDL_Rect inner = {
+                rectdst.x + k,
+                rectdst.y + k,
+                rectdst.w - 2 * k,
+                rectdst.h - 2 * k
+            };
+            if (inner.w <= 0 || inner.h <= 0)
+                break;
+            SDL_RenderDrawRect(renderer, &inner);
+        }
     }
 }
 
@@ -79,7 +101,7 @@ void Player::drawGrill(SDL_Renderer *renderer) {
         rectdst.x = this->grill[i].pos_x;
         rectdst.y = this->grill[i].pos_y;
 
-        drawPosibility(i, rectdst, this, time, renderer);
+        drawPosibility(i, rectdst, this, time, renderer, 3);
 
         if (grill[i].occupied_by == "1")
             SDL_RenderCopy(renderer, this->Player_one.data, NULL, &rectdst);
