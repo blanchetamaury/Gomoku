@@ -51,21 +51,42 @@ void HSVtoRGB(float h, float s, float v, Uint8 &r, Uint8 &g, Uint8 &b) {
     b = (Uint8)((b1 + m) * 255);
 }
 
-bool Player::checkPosibility(int pos) {
-    int valueLeft = 1;
-    int valueRight = 1;
-    
-    if (this->last_pos % (NB_CASE - 1) == 0)
-        valueLeft = 0;
-    if (this->last_pos % (NB_CASE - 1) == (NB_CASE - 2))
-        valueRight = 0;
+int  checkAreaLinePosibilityRight(int pos, int dl) {
+    return (pos % (NB_CASE - 1) + (POSIBILITY_SIZE * dl)) >= (NB_CASE - 1) ?
+        (POSIBILITY_SIZE - (pos % (NB_CASE - 1) + (POSIBILITY_SIZE * dl)) % (NB_CASE - 1) - 1) :
+        POSIBILITY_SIZE;
+}
 
-    if (pos >= this->last_pos - valueLeft && pos <= this->last_pos + valueRight)
-        return true;
-    if (pos >= this->last_pos - valueLeft - (NB_CASE - 1) && pos <= this->last_pos + valueRight - (NB_CASE - 1))
-        return true;
-    if (pos >= this->last_pos - valueLeft + (NB_CASE - 1) && pos <= this->last_pos + valueRight + (NB_CASE - 1))
-        return true;
+int  checkAreaLinePosibilityLeft(int pos, int dl) {
+    return (pos % (NB_CASE - 1) + (POSIBILITY_SIZE * dl)) <= 0 ?
+        (POSIBILITY_SIZE + (pos % (NB_CASE - 1) + (POSIBILITY_SIZE * dl))) :
+        POSIBILITY_SIZE;
+}
+
+int  checkAreaColPosibilityBottom(int pos, int dc) {
+    return (pos / (NB_CASE - 1) + (POSIBILITY_SIZE * dc)) >= (NB_CASE - 1) ?
+        (POSIBILITY_SIZE - (pos / (NB_CASE - 1) + (POSIBILITY_SIZE * dc)) % (NB_CASE - 1) - 1) :
+        POSIBILITY_SIZE;
+}
+
+int  checkAreaColPosibilityTop(int pos, int dc) {
+    return (pos / (NB_CASE - 1) + (POSIBILITY_SIZE * dc)) <= 0 ?
+        (POSIBILITY_SIZE + (pos / (NB_CASE - 1) + (POSIBILITY_SIZE * dc))) :
+        POSIBILITY_SIZE;
+}
+
+bool Player::checkPosibility(int pos) {
+    int valueLeft = checkAreaLinePosibilityLeft(this->last_pos, -1);
+    int valueRight = checkAreaLinePosibilityRight(this->last_pos, 1);
+    int valueTop = checkAreaColPosibilityTop(this->last_pos, -1);
+    int valueDown = checkAreaColPosibilityBottom(this->last_pos, 1);
+
+    for (int i = 0; i <= valueTop || i <= valueDown; i++) {
+        if (i <= valueTop && pos >= this->last_pos - valueLeft - (NB_CASE - 1) * i && pos <= this->last_pos + valueRight - (NB_CASE - 1) * i)
+            return true;
+        if (i <= valueDown && pos >= this->last_pos - valueLeft + (NB_CASE - 1) * i && pos <= this->last_pos + valueRight + (NB_CASE - 1) * i)
+            return true;
+    }
 
     return false;
 }

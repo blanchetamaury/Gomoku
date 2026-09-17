@@ -6,6 +6,8 @@
 # include "../map/map.hpp" 
 # include <iostream>
 
+# define POSIBILITY_SIZE 1
+
 class Player {
 	public:
 		typedef struct s_map {
