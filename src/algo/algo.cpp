@@ -3,26 +3,41 @@
 algo::algo() {}
 algo::~algo() {}
 
-int get_score(Player *p, int pos, int hori, int verti) {
-
+int checkDirection(int pos, Player *p, int direction_one, int direction_two) {
+	
     int count = 0;
-    for (int i = 0; i < 5; i++) {
-        if ()
-    }
+	int i = 0;
+
+	while (p->grill[pos + i].occupied_by == p->grill[pos].occupied_by) {
+		i += direction_one + direction_two;
+		
+		if (pos + i > (NB_CASE - 1) * (NB_CASE - 1) || pos + i < 0)
+			break;
+		if (pos + i % (NB_CASE - 1) == 0)
+			break;
+		count++;
+	}
+	return count;	
 }
 
 int check_comb(Player *p, int pos) {
 
-    int best_val = values[0];
+    int bestScore = -1;
+    
+    int count = checkDirection(pos, p, 1, 0) + checkDirection(pos, p, -1, 0) - 1;
+    if (count > bestScore)
+        bestScore = count;
+    count = checkDirection(pos, p, 0, (NB_CASE - 1)) + checkDirection(pos, p, 0, -(NB_CASE - 1)) - 1;
+    if (count > bestScore)
+        bestScore = count;
+    count = checkDirection(pos, p, 1, (NB_CASE - 1)) + checkDirection(pos, p, -1, -(NB_CASE - 1)) - 1;
+    if (count > bestScore)
+        bestScore = count;
+    count = checkDirection(pos, p, 1, -(NB_CASE - 1)) + checkDirection(pos, p, -1, (NB_CASE - 1)) - 1;
+    if (count > bestScore)
+        bestScore = count;
 
-    for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            int new_val = get_score(p, pos, i, j);
-            if (new_val > best_val)
-                best_val = new_val;
-        }
-    }
-    return best_val;
+    return values[bestScore];
 }
 
 int algo::heuristique(Player *p) {
