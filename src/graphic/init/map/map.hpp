@@ -10,8 +10,6 @@
 class Map {
 	public:
 		typedef struct s_map {
-			Init_texture texture;
-
 			std::string  occupied_by;
 
 			int			 pos_x;
@@ -24,7 +22,7 @@ class Map {
 		int				w;
 		int				h;
 
-		Map(std::string path_texture_one, std::string path_texture_second, SDL_Renderer *renderer, SDL_Window *window);
+		Map(SDL_Renderer *renderer, SDL_Window *window);
 		~Map();
 
 		void drawMap(SDL_Renderer *renderer);

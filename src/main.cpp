@@ -8,6 +8,7 @@
 #define TARGET_FPS 60
 
 Rules rules;
+Lib_texture texture;
 
 void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 {
@@ -69,9 +70,11 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 
 int main() {
     Init graph;
-    Map map("./src/graphic/assets/square.png", "./src/graphic/assets/square.png", graph.renderer, graph.window);
-    Player grill("./src/graphic/assets/player_one.png", "./src/graphic/assets/player_two.png", graph.renderer, graph.window);
-    Init_texture bg("./src/graphic/assets/bg.png", graph.renderer);
+
+    init_texture_to_lib(graph.renderer);
+
+    Map map(graph.renderer, graph.window);
+    Player grill(graph.renderer, graph.window);
 
     Uint32 frame_time;
     Uint32 frame_duration;
@@ -93,7 +96,7 @@ int main() {
         start_time = SDL_GetTicks();
 
 
-        SDL_RenderCopy(graph.renderer, bg.data, NULL, &rectdst);
+        SDL_RenderCopy(graph.renderer, texture.lib[BACKGROUND], NULL, &rectdst);
 
         map.drawMap(graph.renderer);
         grill.drawGrill(graph.renderer);

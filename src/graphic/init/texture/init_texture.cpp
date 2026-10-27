@@ -32,3 +32,21 @@ Init_texture::~Init_texture() {
 		SDL_DestroyTexture(this->data);
 	this->data = NULL;
 }
+
+Lib_texture::Lib_texture() {}
+Lib_texture::~Lib_texture() {}
+
+void Lib_texture::add_texture(std:: string path, SDL_Renderer *renderer, int value) {
+	Init_texture texture(path, renderer);
+
+	lib[value] = texture.data;
+	texture.data = NULL;
+}
+
+void init_texture_to_lib(SDL_Renderer *renderer) {
+	texture.add_texture("./src/graphic/assets/bg.png", renderer, BACKGROUND);
+	texture.add_texture("./src/graphic/assets/player_one.png", renderer, PLAYER_ONE);
+	texture.add_texture("./src/graphic/assets/player_two.png", renderer, PLAYER_TWO);
+	texture.add_texture("./src/graphic/assets/cross.png", renderer, CROSS);
+	texture.add_texture("./src/graphic/assets/square.png", renderer, SQUARE);
+}

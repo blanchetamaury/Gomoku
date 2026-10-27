@@ -2,10 +2,7 @@
 #include "../../include/include.hpp"
 #include "../texture/init_texture.hpp"
 
-Player::Player(std::string path_one, std::string path_two, SDL_Renderer *renderer, SDL_Window *window) {
-	this->Player_one.loadTexture(path_one, renderer);
-	this->Player_two.loadTexture(path_two, renderer);
-
+Player::Player(SDL_Renderer *renderer, SDL_Window *window) {
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 
@@ -93,7 +90,7 @@ bool Player::checkPosibility(int pos) {
 
 void drawPosibility(int i, SDL_Rect rectdst, Player *p, Uint32 time,
                     SDL_Renderer *renderer, int thickness) {
-    if (p->checkPosibility(i) == true && p->grill[i].occupied_by == "0") {
+    if (p->checkPosibility(i) == false && p->grill[i].occupied_by == "0") {
         float hue = fmod((time / 10.0) + (i * 15), 360.0);
 
         Uint8 r, g, b;
@@ -125,8 +122,8 @@ void Player::drawGrill(SDL_Renderer *renderer) {
         drawPosibility(i, rectdst, this, time, renderer, 3);
 
         if (grill[i].occupied_by == "1")
-            SDL_RenderCopy(renderer, this->Player_one.data, NULL, &rectdst);
+            SDL_RenderCopy(renderer, texture.lib[PLAYER_ONE], NULL, &rectdst);
         if (grill[i].occupied_by == "-1")
-            SDL_RenderCopy(renderer, this->Player_two.data, NULL, &rectdst);
+            SDL_RenderCopy(renderer, texture.lib[PLAYER_TWO], NULL, &rectdst);
     }
 }

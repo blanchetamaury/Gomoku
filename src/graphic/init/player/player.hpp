@@ -6,7 +6,7 @@
 # include "../map/map.hpp" 
 # include <iostream>
 
-# define POSIBILITY_SIZE 1
+# define POSIBILITY_SIZE 100
 
 class Player {
 	public:
@@ -25,10 +25,7 @@ class Player {
 
 		int				last_pos;
 
-		Init_texture Player_one;
-		Init_texture Player_two;
-
-		Player(std::string path_texture_one, std::string path_texture_second, SDL_Renderer *renderer, SDL_Window *window);
+		Player(SDL_Renderer *renderer, SDL_Window *window);
 		~Player();
 
 		void drawGrill(SDL_Renderer *renderer);
