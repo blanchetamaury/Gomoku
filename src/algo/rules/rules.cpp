@@ -17,7 +17,7 @@ int checkDirection(int pos, Player *p, int direction_one, int direction_two) {
 			break;
 		count++;
 	}
-	return count;
+	return count;	
 }
 
 bool Rules::checkWin(int pos, Player *p) {	

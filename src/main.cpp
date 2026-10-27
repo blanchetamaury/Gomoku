@@ -35,7 +35,7 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
                             if (*round % 2 == 0)
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
 							else 
-								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "2";
+								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "-1";
                             rules.CaptureSPair(value_x + value_y * (NB_CASE - 1), grill);
                             if (rules.checkWin(value_x + value_y * (NB_CASE - 1), grill) == true) {
                                 printf("Winner is %d\n", *round % 2 + 1 );

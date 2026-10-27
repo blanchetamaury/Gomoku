@@ -22,7 +22,7 @@ Player::Player(std::string path_one, std::string path_two, SDL_Renderer *rendere
 			start_x = (windowWidth - nb_case * SIZE_X_CASE) / 2;
 			start_y += SIZE_Y_CASE;
 		}
-		grill[i].occupied_by = '0';
+		grill[i].occupied_by = "0";
 		grill[i].pos_x = start_x;
 		grill[i].pos_y = start_y;
 	}
@@ -126,7 +126,7 @@ void Player::drawGrill(SDL_Renderer *renderer) {
 
         if (grill[i].occupied_by == "1")
             SDL_RenderCopy(renderer, this->Player_one.data, NULL, &rectdst);
-        if (grill[i].occupied_by == "2")
+        if (grill[i].occupied_by == "-1")
             SDL_RenderCopy(renderer, this->Player_two.data, NULL, &rectdst);
     }
 }
