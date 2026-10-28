@@ -1,25 +1,5 @@
 #include "algo.hpp"
 
-algo::algo() {}
-algo::~algo() {}
-
-int checkDirection(int pos, Player *p, int direction_one, int direction_two) {
-	
-    int count = 0;
-	int i = 0;
-
-	while (p->grill[pos + i].occupied_by == p->grill[pos].occupied_by) {
-		i += direction_one + direction_two;
-		
-		if (pos + i > (NB_CASE - 1) * (NB_CASE - 1) || pos + i < 0)
-			break;
-		if (pos + i % (NB_CASE - 1) == 0)
-			break;
-		count++;
-	}
-	return count;	
-}
-
 int check_comb(Player *p, int pos) {
 
     int bestScore = -1;
@@ -40,7 +20,7 @@ int check_comb(Player *p, int pos) {
     return values[bestScore];
 }
 
-int algo::heuristique(Player *p) {
+int heuristique(Player *p) {
     
     int best_pos = -1;
 

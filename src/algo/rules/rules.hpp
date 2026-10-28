@@ -13,4 +13,5 @@ class Rules {
 		void CaptureSPair(int pos, Player *p);
 };
 
+int checkDirection(int pos, Player *p, int direction_one, int direction_two);
 #endif

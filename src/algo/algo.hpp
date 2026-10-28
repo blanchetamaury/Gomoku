@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "../graphic/init/player/player.hpp"
+#include "rules/rules.hpp"
 
 const int values[] = {
     0,
@@ -13,13 +14,6 @@ const int values[] = {
     100000
 };
 
-class algo {
-    public:
-
-        algo();
-        ~algo();
-
-        int heuristique(Player *p);
-};
-
+int heuristique(Player *p);
+    
 #endif

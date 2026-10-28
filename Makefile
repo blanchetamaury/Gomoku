@@ -9,7 +9,8 @@ GRAPHIC = src/graphic/init/init.cpp \
 			src/graphic/init/map/map.cpp \
 			src/graphic/init/player/player.cpp
 
-ALGO = src/algo/rules/rules.cpp
+ALGO = src/algo/rules/rules.cpp \
+			src/algo/algo.cpp
 
 OBJ = $(SRC:%.cpp=%.o)
 

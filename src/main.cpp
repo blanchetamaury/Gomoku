@@ -4,6 +4,7 @@
 #include "graphic/init/map/map.hpp"
 #include "graphic/init/player/player.hpp"
 #include "algo/rules/rules.hpp"
+#include "algo/algo.hpp"
 
 #define TARGET_FPS 60
 
@@ -33,10 +34,10 @@ void	listenEvent(bool &running, SDL_Event *event, Player *grill, int *round)
 						if (value_y != 0)
 							value_y /= SIZE_Y_CASE;
 						if (grill->checkPosibility(value_x + value_y * (NB_CASE - 1)) == true && grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by == "0") {
-                            if (*round % 2 == 0)
-								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
-							else 
+                            if (*round % 2 != 0)
 								grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "-1";
+							// else
+							// 	grill->grill[value_x + value_y * (NB_CASE - 1)].occupied_by = "1";
                             rules.CaptureSPair(value_x + value_y * (NB_CASE - 1), grill);
                             if (rules.checkWin(value_x + value_y * (NB_CASE - 1), grill) == true) {
                                 printf("Winner is %d\n", *round % 2 + 1 );
@@ -92,9 +93,16 @@ int main() {
     frame_time = 1000 / TARGET_FPS;
     while (running)
     {
-        listenEvent(running, &event, &grill, &round);
+        if (round % 2 != 0)
+            listenEvent(running, &event, &grill, &round);
+        else {
+            int move_ia = heuristique(&grill);
+            std::cout << move_ia << std::endl;
+            std::cout << grill.grill[move_ia].pos_x << " " << grill.grill[move_ia].pos_y << std::endl;
+            grill.grill[move_ia].occupied_by = "1";
+            round++;
+        }
         start_time = SDL_GetTicks();
-
 
         SDL_RenderCopy(graph.renderer, texture.lib[BACKGROUND], NULL, &rectdst);
 
