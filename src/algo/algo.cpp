@@ -1,19 +1,35 @@
 #include "algo.hpp"
 
+int checkFutureMove(int pos, Player *p, int direction_one, int direction_two) {
+	int count = 0;
+	int i = direction_one + direction_two;
+
+	while (p->grill[pos + i].occupied_by == "1") {
+		i += direction_one + direction_two;
+		
+		if (pos + i > (NB_CASE - 1) * (NB_CASE - 1) || pos + i < 0)
+			break;
+		if (pos + i % (NB_CASE - 1) == 0)
+			break;
+		count++;
+	}
+	return count;
+}
+
 int check_comb(Player *p, int pos) {
 
     int bestScore = -1;
     
-    int count = checkDirection(pos, p, 1, 0) + checkDirection(pos, p, -1, 0) - 1;
+    int count = checkFutureMove(pos, p, 1, 0) + checkFutureMove(pos, p, -1, 0);
     if (count > bestScore)
         bestScore = count;
-    count = checkDirection(pos, p, 0, (NB_CASE - 1)) + checkDirection(pos, p, 0, -(NB_CASE - 1)) - 1;
+    count = checkFutureMove(pos, p, 0, (NB_CASE - 1)) + checkFutureMove(pos, p, 0, -(NB_CASE - 1));
     if (count > bestScore)
         bestScore = count;
-    count = checkDirection(pos, p, 1, (NB_CASE - 1)) + checkDirection(pos, p, -1, -(NB_CASE - 1)) - 1;
+    count = checkFutureMove(pos, p, 1, (NB_CASE - 1)) + checkFutureMove(pos, p, -1, -(NB_CASE - 1));
     if (count > bestScore)
         bestScore = count;
-    count = checkDirection(pos, p, 1, -(NB_CASE - 1)) + checkDirection(pos, p, -1, (NB_CASE - 1)) - 1;
+    count = checkFutureMove(pos, p, 1, -(NB_CASE - 1)) + checkFutureMove(pos, p, -1, (NB_CASE - 1));
     if (count > bestScore)
         bestScore = count;
 

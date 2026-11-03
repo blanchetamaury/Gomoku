@@ -98,7 +98,6 @@ int main() {
         else {
             int move_ia = heuristique(&grill);
             std::cout << move_ia << std::endl;
-            std::cout << grill.grill[move_ia].pos_x << " " << grill.grill[move_ia].pos_y << std::endl;
             grill.grill[move_ia].occupied_by = "1";
             round++;
         }
